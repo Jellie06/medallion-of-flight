@@ -44,12 +44,10 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
         ItemMeta meta = medallion.getItemMeta();
 
         if (meta != null) {
-            // Modern Adventure API for name
             meta.displayName(Component.text("Medallion of Flight")
                     .color(NamedTextColor.GOLD)
                     .decoration(TextDecoration.ITALIC, false));
 
-            // Modern lore
             meta.lore(List.of(
                     Component.text("A mystical medallion that grants")
                             .color(NamedTextColor.GRAY)
@@ -59,11 +57,9 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
                             .decoration(TextDecoration.ITALIC, false)
             ));
 
-            // Make it glow without showing enchantments
             meta.addEnchant(Enchantment.UNBREAKING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-            // Add persistent tag
             meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "true");
 
             medallion.setItemMeta(meta);
@@ -101,7 +97,7 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
             player.setAllowFlight(true);
         } else {
             switch (player.getGameMode()) {
-                case CREATIVE, SPECTATOR -> {} // Keep flight
+                case CREATIVE, SPECTATOR -> {} 
                 default -> {
                     player.setAllowFlight(false);
                     player.setFlying(false);
@@ -137,6 +133,6 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        // No cleanup needed
+        
     }
 }
