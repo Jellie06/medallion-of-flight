@@ -71,6 +71,16 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
 
         JsonOperations.jsonSave(recipe, Json_File);
 
+         if(!Json_File.canWrite()){
+            getLogger().warning("Error! recipe.json can't write... attempting to correct write permissions");
+            Json_File.setWritable(true);
+        }
+
+        if(!Json_File.canRead()){
+            getLogger().warning("Error! recipe.json can't read... attempting to correct read permissions");
+            Json_File.setReadable(true);
+        }
+
     }
 
     private void createMedallion() {
@@ -194,4 +204,5 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
         
     }
 }
+
 
