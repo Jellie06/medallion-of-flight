@@ -44,6 +44,10 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
 
+        //This line is very important and ensures that the recipes.json directory will generate all of the time, because sometimes write permissions can be a bit weird! 
+        this.saveDefaultConfig();
+
+
 
         Json_File = new File(getDataFolder(), "recipe.json");
 
@@ -190,3 +194,4 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
         
     }
 }
+
