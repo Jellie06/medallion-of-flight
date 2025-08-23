@@ -1,9 +1,13 @@
 package me.jellie06.medallionofflight;
 
+import me.jellie06.medallionofflight.json.JsonItem;
+import me.jellie06.medallionofflight.json.JsonOperations;
+import me.jellie06.medallionofflight.json.JsonStruct;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -23,6 +27,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.List;
 
 public class MedallionOfFlight extends JavaPlugin implements Listener {
@@ -30,13 +35,52 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
     private ItemStack medallion;
     private NamespacedKey key;
 
+    public static MedallionOfFlight plugin;
+
+    public JsonStruct recipe;
+    File Json_File;
+
     @Override
     public void onEnable() {
-        getLogger().info("MedallionOfFlight enabled!");
+        plugin = this;
+
+        //This line is very important and ensures that the recipes.json directory will generate all of the time, because sometimes write permissions can be a bit weird! 
+        this.saveDefaultConfig();
+
+
+
+        Json_File = new File(getDataFolder(), "recipe.json");
+
+
+        recipe = JsonOperations.jsonInit(Json_File);
+
+
+
+
+
+
+        getLogger().info(ChatColor.BLUE+"Enabled MedallionOfFlight version " + this.getPluginMeta().getVersion() + ", initial plugin created by " + ChatColor.GREEN + "doopaderp" + ChatColor.BLUE+", updated to 1.21 by " + ChatColor.LIGHT_PURPLE + "Jellie06" + ChatColor.BLUE  + " and JSON support added by " + ChatColor.GOLD + "BlueNightFury46");
         key = new NamespacedKey(this, "medallion_of_flight");
         createMedallion();
         registerRecipe();
         Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    @Override
+    public void onDisable() {
+
+        JsonOperations.jsonSave(recipe, Json_File);
+
+         if(!Json_File.canWrite()){
+            getLogger().warning("Error! recipe.json can't write... attempting to correct write permissions");
+            Json_File.setWritable(true);
+        }
+
+        if(!Json_File.canRead()){
+            getLogger().warning("Error! recipe.json can't read... attempting to correct read permissions");
+            Json_File.setReadable(true);
+        }
+
     }
 
     private void createMedallion() {
@@ -66,17 +110,41 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
         }
     }
 
+    //Abstracted away for readability
+    private int arraysize(int n){
+        return (n-1);
+    }
+
     private void registerRecipe() {
-        ShapedRecipe recipe = new ShapedRecipe(
+        ShapedRecipe medallion_recipe = new ShapedRecipe(
                 new NamespacedKey(this, "medallion_of_flight"),
                 medallion
         );
-        recipe.shape("FGF", "GEG", "FGF");
-    recipe.setIngredient('F', Material.DIAMOND_BLOCK);
-        recipe.setIngredient('G', Material.NETHER_STAR);
-        recipe.setIngredient('E', Material.ELYTRA);
 
-        Bukkit.addRecipe(recipe);
+        if(recipe.recipe_shape.size()>=arraysize(3)){
+            medallion_recipe.shape(recipe.recipe_shape.get(arraysize(1)), recipe.recipe_shape.get(arraysize(2)), recipe.recipe_shape.get(arraysize(3)));
+
+            for(JsonItem item : recipe.items){
+                ItemStack recipe_item = new ItemStack(Material.getMaterial(item.item_name), item.item_count);
+                medallion_recipe.setIngredient(item.key, recipe_item);
+            }
+
+            Bukkit.addRecipe(medallion_recipe);
+
+
+        } else {
+
+
+            this.getLogger().warning("The provided recipe shape failed to load! Loading the default config");
+
+            medallion_recipe.shape("FGF", "GEG", "FGF");
+            medallion_recipe.setIngredient('F', Material.DIAMOND_BLOCK);
+            medallion_recipe.setIngredient('G', Material.NETHER_STAR);
+            medallion_recipe.setIngredient('E', Material.ELYTRA);
+
+            Bukkit.addRecipe(medallion_recipe);
+
+        }
     }
 
     private boolean hasMedallion(Player player) {
@@ -136,3 +204,5 @@ public class MedallionOfFlight extends JavaPlugin implements Listener {
         
     }
 }
+
+

@@ -2,5 +2,14 @@ name: medallionOfFlight
 version: '1.0.0'
 main: me.jellie06.medallionofflight.MedallionOfFlight
 api-version: '1.21'
-author: Jellie06
+authors: [ doopaderp, Jellie06, BlueNightFury46 ]
 description: A craftable medallion that grants survival players flight
+
+
+commands:
+  giveflightmedallion:
+
+permissions:
+  flightmedallion.give:
+    description: Gives the player a Medallion of Flight.
+    default: op

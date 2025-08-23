@@ -1,0 +1,24 @@
+{
+  "recipe_shape": [
+    "FGF",
+    "GEG",
+    "FGF"
+  ],
+  "items": [
+    {
+      "item_name": "DIAMOND_BLOCK",
+      "item_count": 8,
+      "key": "G"
+    },
+    {
+      "item_name": "NETHER_STAR",
+      "item_count": 1,
+      "key": "F"
+    },
+    {
+      "item_name": "ELYTRA",
+      "item_count": 1,
+      "key": "E"
+    }
+  ]
+}
